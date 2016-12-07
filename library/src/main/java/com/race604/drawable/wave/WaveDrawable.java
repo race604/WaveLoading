@@ -29,7 +29,7 @@ public class WaveDrawable extends Drawable implements Animatable {
     private static final float WAVE_SPEED_FACTOR = 0.02f;
     private Drawable mDrawable;
     private int mWidth, mHeight;
-    private int mWaveAmplitude, mWaveOffset, mWaveStep, mWaveLevel;
+    private int mWaveAmplitude, mWaveLength, mWaveOffset, mWaveStep, mWaveLevel;
     private ValueAnimator mAnimator;
     private float mProgress = 0.3f;
     private Paint mPaint;
@@ -77,10 +77,11 @@ public class WaveDrawable extends Drawable implements Animatable {
         mWidth = mDrawable.getIntrinsicWidth();
         mHeight = mDrawable.getIntrinsicHeight();
         mWaveAmplitude = Math.max(8, (int) (mHeight * WAVE_AMPLITUDE_FACTOR));
+        mWaveLength = mWidth;
         mWaveStep = Math.max(1, (int) (mWidth* WAVE_SPEED_FACTOR));
 
         mMatrix.reset();
-        mMask = createMask(mWidth, mWaveAmplitude);
+        mMask = createMask(mWidth, mWaveLength, mWaveAmplitude);
         mPaint = new Paint();
         mPaint.setFilterBitmap(false);
         mPaint.setColor(Color.BLACK);
@@ -121,7 +122,20 @@ public class WaveDrawable extends Drawable implements Animatable {
         amplitude = Math.max(0, Math.min(amplitude, mHeight / 2));
         if (mWaveAmplitude != amplitude) {
             mWaveAmplitude = amplitude;
-            mMask = createMask(mWidth, mWaveAmplitude);
+            mMask = createMask(mWidth, mWaveLength, mWaveAmplitude);
+            invalidateSelf();
+        }
+    }
+
+    /**
+     * Set wave length (in pixels)
+     * @param length
+     */
+    public void setWaveLength(int length) {
+        length = Math.max(8, Math.min(mWidth * 2, length));
+        if (length != mWaveLength) {
+            mWaveLength = length;
+            mMask = createMask(mWidth, mWaveLength, mWaveAmplitude);
             invalidateSelf();
         }
     }
@@ -166,8 +180,8 @@ public class WaveDrawable extends Drawable implements Animatable {
         }
 
         mWaveOffset += mWaveStep;
-        if (mWaveOffset > mWidth) {
-            mWaveOffset -= mWidth;
+        if (mWaveOffset > mWaveLength) {
+            mWaveOffset -= mWaveLength;
         }
 
         if (mWaveLevel > 0) {
@@ -240,20 +254,26 @@ public class WaveDrawable extends Drawable implements Animatable {
         invalidateSelf();
     }
 
-    private static Bitmap createMask(int width, int height) {
-        Bitmap bm = Bitmap.createBitmap(width * 2, height * 2, Bitmap.Config.ARGB_8888);
+    private static Bitmap createMask(int width, int length, int amplitude) {
+
+        final int count = (int) Math.ceil((width + length) / (float)length);
+
+        Bitmap bm = Bitmap.createBitmap(length * count, amplitude * 2, Bitmap.Config.ARGB_8888);
         Canvas c = new Canvas(bm);
         Paint p = new Paint(Paint.ANTI_ALIAS_FLAG);
 
         Path path = new Path();
-        path.moveTo(0, height);
+        path.moveTo(0, amplitude);
 
-        final int halfWidth = width / 2;
-        final int stepX = width / 4;
-        path.quadTo(stepX, height + height, halfWidth, height);
-        path.quadTo(width - stepX, 0, width, height);
-        path.quadTo(width + stepX, bm.getHeight(), width + halfWidth, height);
-        path.quadTo(width + halfWidth + stepX, 0, bm.getWidth(), height);
+        final float stepX = length / 4f;
+        float x = 0;
+        float y = 0;
+        for (int i = 0; i < count * 2; i++) {
+            x += stepX;
+            path.quadTo(x, y, x+stepX, amplitude);
+            x += stepX;
+            y = bm.getHeight() - y;
+        }
         path.lineTo(bm.getWidth(), bm.getHeight());
         path.lineTo(0, bm.getHeight());
         path.close();

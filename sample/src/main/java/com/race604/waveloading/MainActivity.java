@@ -1,12 +1,20 @@
 package com.race604.waveloading;
 
+import android.graphics.Bitmap;
+import android.graphics.Canvas;
+import android.os.Environment;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.view.View;
 import android.widget.ImageView;
 import android.widget.RadioGroup;
 import android.widget.SeekBar;
 
 import com.race604.drawable.wave.WaveDrawable;
+
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -15,6 +23,7 @@ public class MainActivity extends AppCompatActivity {
     private SeekBar mLevelSeekBar;
     private SeekBar mAmplitudeSeekBar;
     private SeekBar mSpeedSeekBar;
+    private SeekBar mLengthSeekBar;
     private RadioGroup mRadioGroup;
 
     @Override
@@ -40,6 +49,14 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
                 mWaveDrawable.setWaveAmplitude(progress);
+            }
+        });
+
+        mLengthSeekBar = (SeekBar) findViewById(R.id.length_seek);
+        mLengthSeekBar.setOnSeekBarChangeListener(new SimpleOnSeekBarChangeListener() {
+            @Override
+            public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+                mWaveDrawable.setWaveLength(progress);
             }
         });
 
@@ -75,6 +92,7 @@ public class MainActivity extends AppCompatActivity {
             mWaveDrawable.setLevel(mLevelSeekBar.getProgress());
         }
         mWaveDrawable.setWaveAmplitude(mAmplitudeSeekBar.getProgress());
+        mWaveDrawable.setWaveLength(mLengthSeekBar.getProgress());
         mWaveDrawable.setWaveSpeed(mSpeedSeekBar.getProgress());
     }
 
