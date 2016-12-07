@@ -6,7 +6,13 @@ This library provides a *wave loading* animation as a **Drawable**.
 
 ## How to use
 
-Only one line.
+Add dependency:
+
+```
+compile 'com.race604.waveloading:library:1.0.0'
+```
+
+Use in your project with only one line:
 
 ```
 Drawable mWaveDrawable = new WaveDrawable(otherDrawable);
