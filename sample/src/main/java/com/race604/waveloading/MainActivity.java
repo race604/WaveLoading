@@ -1,0 +1,98 @@
+package com.race604.waveloading;
+
+import android.support.v7.app.AppCompatActivity;
+import android.os.Bundle;
+import android.widget.ImageView;
+import android.widget.RadioGroup;
+import android.widget.SeekBar;
+
+import com.race604.drawable.wave.WaveDrawable;
+
+public class MainActivity extends AppCompatActivity {
+
+    private ImageView mImageView;
+    private WaveDrawable mWaveDrawable;
+    private SeekBar mLevelSeekBar;
+    private SeekBar mAmplitudeSeekBar;
+    private SeekBar mSpeedSeekBar;
+    private RadioGroup mRadioGroup;
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_main);
+
+        mImageView = (ImageView) findViewById(R.id.image);
+        mWaveDrawable = new WaveDrawable(this, R.drawable.android_robot);
+        mImageView.setImageDrawable(mWaveDrawable);
+
+
+        mLevelSeekBar = (SeekBar) findViewById(R.id.level_seek);
+        mLevelSeekBar.setOnSeekBarChangeListener(new SimpleOnSeekBarChangeListener() {
+            @Override
+            public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+                mWaveDrawable.setLevel(progress);
+            }
+        });
+
+        mAmplitudeSeekBar = (SeekBar) findViewById(R.id.amplitude_seek);
+        mAmplitudeSeekBar.setOnSeekBarChangeListener(new SimpleOnSeekBarChangeListener() {
+            @Override
+            public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+                mWaveDrawable.setWaveAmplitude(progress);
+            }
+        });
+
+        mSpeedSeekBar = (SeekBar) findViewById(R.id.speed_seek);
+        mSpeedSeekBar.setOnSeekBarChangeListener(new SimpleOnSeekBarChangeListener() {
+            @Override
+            public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+                mWaveDrawable.setWaveSpeed(progress);
+            }
+        });
+
+        mRadioGroup = (RadioGroup) findViewById(R.id.modes);
+        mRadioGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(RadioGroup group, int checkedId) {
+                final boolean indeterminate = checkedId == R.id.rb_yes;
+                setIndeterminateMode(indeterminate);
+            }
+        });
+        setIndeterminateMode(mRadioGroup.getCheckedRadioButtonId() == R.id.rb_yes);
+
+        ImageView imageView2 = (ImageView) findViewById(R.id.image2);
+        WaveDrawable chromeWave = new WaveDrawable(this, R.drawable.chrome_logo);
+        imageView2.setImageDrawable(chromeWave);
+        chromeWave.setIndeterminate(true);
+    }
+
+    private void setIndeterminateMode(boolean indeterminate) {
+        mWaveDrawable.setIndeterminate(indeterminate);
+        mLevelSeekBar.setEnabled(!indeterminate);
+
+        if (!indeterminate) {
+            mWaveDrawable.setLevel(mLevelSeekBar.getProgress());
+        }
+        mWaveDrawable.setWaveAmplitude(mAmplitudeSeekBar.getProgress());
+        mWaveDrawable.setWaveSpeed(mSpeedSeekBar.getProgress());
+    }
+
+    private static class SimpleOnSeekBarChangeListener implements SeekBar.OnSeekBarChangeListener{
+
+        @Override
+        public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+            // Nothing
+        }
+
+        @Override
+        public void onStartTrackingTouch(SeekBar seekBar) {
+            // Nothing
+        }
+
+        @Override
+        public void onStopTrackingTouch(SeekBar seekBar) {
+            // Nothing
+        }
+    }
+}
