@@ -27,8 +27,8 @@ Other configurable APIs:
 * `public void setWaveLength(int length)`, set wave length (in pixels)
 * `public void setWaveSpeed(int step)`, set wave move speed (in pixels)
 * `public void setIndeterminate(boolean indeterminate)`, like progress bar, if run
-in *indeterminate* mode, it'll increase water level, otherwise, you can
-use `boolean setLevel(int level)` to set the loading progress.
+in *indeterminate* mode, it'll increase water level over and over again, otherwise, you can
+use `boolean setLevel(int level)` to set the water level, acting as loading progress.
 
 ## License
 MIT

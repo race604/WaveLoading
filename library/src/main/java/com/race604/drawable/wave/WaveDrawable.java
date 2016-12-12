@@ -173,6 +173,10 @@ public class WaveDrawable extends Drawable implements Animatable {
                 Canvas.FULL_COLOR_LAYER_SAVE_FLAG |
                 Canvas.CLIP_TO_LAYER_SAVE_FLAG);
 
+        if (mWaveLevel > 0) {
+            canvas.clipRect(0, mWaveLevel, mWidth, mHeight);
+        }
+
         mDrawable.draw(canvas);
 
         if (mProgress >= 0.999f) {
@@ -182,12 +186,6 @@ public class WaveDrawable extends Drawable implements Animatable {
         mWaveOffset += mWaveStep;
         if (mWaveOffset > mWaveLength) {
             mWaveOffset -= mWaveLength;
-        }
-
-        if (mWaveLevel > 0) {
-            mPaint.setColor(Color.TRANSPARENT);
-            canvas.drawRect(0, 0, mWidth, mWaveLevel, mPaint);
-            mPaint.setColor(Color.WHITE);
         }
 
         mMatrix.setTranslate(-mWaveOffset, mWaveLevel);
