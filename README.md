@@ -9,7 +9,7 @@ This library provides a *wave loading* animation as a **Drawable**.
 Add dependency:
 
 ```
-compile 'com.race604.waveloading:library:1.0.0'
+compile 'com.race604.waveloading:library:1.0.1'
 ```
 
 Use in your project with only one line:
