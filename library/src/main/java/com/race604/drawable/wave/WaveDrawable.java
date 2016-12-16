@@ -87,9 +87,9 @@ public class WaveDrawable extends Drawable implements Animatable {
         mPaint.setColor(Color.BLACK);
         mPaint.setXfermode(sXfermode);
 
-        mAnimator = ValueAnimator.ofFloat(0, 1);
+        mAnimator = ValueAnimator.ofFloat(0.1f, 1);
         mAnimator.setInterpolator(new DecelerateInterpolator());
-        mAnimator.setRepeatMode(ValueAnimator.RESTART);
+        mAnimator.setRepeatMode(ValueAnimator.REVERSE);
         mAnimator.setRepeatCount(ValueAnimator.INFINITE);
         mAnimator.setDuration(5000);
         mAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
