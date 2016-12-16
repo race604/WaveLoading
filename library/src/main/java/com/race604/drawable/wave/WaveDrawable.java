@@ -25,7 +25,7 @@ import android.view.animation.DecelerateInterpolator;
 
 public class WaveDrawable extends Drawable implements Animatable {
 
-    private static final float WAVE_AMPLITUDE_FACTOR = 0.15f;
+    private static final float WAVE_AMPLITUDE_FACTOR = 0.1f;
     private static final float WAVE_SPEED_FACTOR = 0.02f;
     private Drawable mDrawable;
     private int mWidth, mHeight;
@@ -119,7 +119,7 @@ public class WaveDrawable extends Drawable implements Animatable {
      * @param amplitude
      */
     public void setWaveAmplitude(int amplitude) {
-        amplitude = Math.max(0, Math.min(amplitude, mHeight / 2));
+        amplitude = Math.max(1, Math.min(amplitude, mHeight / 2));
         if (mWaveAmplitude != amplitude) {
             mWaveAmplitude = amplitude;
             mMask = createMask(mWidth, mWaveLength, mWaveAmplitude);
@@ -248,7 +248,7 @@ public class WaveDrawable extends Drawable implements Animatable {
 
     private void setProgress(float progress) {
         mProgress = progress;
-        mWaveLevel = mHeight - (int)((mHeight + mWaveAmplitude * 2) * mProgress);
+        mWaveLevel = mHeight - (int)((mHeight + mMask.getHeight()) * mProgress);
         invalidateSelf();
     }
 
@@ -265,7 +265,7 @@ public class WaveDrawable extends Drawable implements Animatable {
 
         final float stepX = length / 4f;
         float x = 0;
-        float y = 0;
+        float y = -amplitude;
         for (int i = 0; i < count * 2; i++) {
             x += stepX;
             path.quadTo(x, y, x+stepX, amplitude);

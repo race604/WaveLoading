@@ -85,8 +85,8 @@
             android:id="@+id/amplitude_seek"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:progress="50"
-            android:max="200"/>
+            android:progress="20"
+            android:max="100"/>
     </LinearLayout>
 
     <LinearLayout
@@ -132,4 +132,5 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_margin="8dp"/>
+
 </LinearLayout>
