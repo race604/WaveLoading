@@ -1,7 +1,9 @@
 package com.race604.waveloading;
 
+import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.view.View;
 import android.widget.ImageView;
 import android.widget.RadioGroup;
 import android.widget.SeekBar;
@@ -26,7 +28,6 @@ public class MainActivity extends AppCompatActivity {
         mImageView = (ImageView) findViewById(R.id.image);
         mWaveDrawable = new WaveDrawable(this, R.drawable.android_robot);
         mImageView.setImageDrawable(mWaveDrawable);
-
 
         mLevelSeekBar = (SeekBar) findViewById(R.id.level_seek);
         mLevelSeekBar.setOnSeekBarChangeListener(new SimpleOnSeekBarChangeListener() {
@@ -82,6 +83,13 @@ public class MainActivity extends AppCompatActivity {
 //        animator.setInterpolator(new AccelerateDecelerateInterpolator());
 //        chromeWave.setIndeterminateAnimator(animator);
         chromeWave.setIndeterminate(true);
+
+        View view = findViewById(R.id.view);
+        int color = getResources().getColor(R.color.colorAccent);
+        WaveDrawable colorWave = new WaveDrawable(new ColorDrawable(color));
+        view.setBackground(colorWave);
+        colorWave.setIndeterminate(true);
+
     }
 
     private void setIndeterminateMode(boolean indeterminate) {
