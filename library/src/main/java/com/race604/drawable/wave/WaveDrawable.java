@@ -23,14 +23,14 @@ import android.view.animation.DecelerateInterpolator;
  * Created by jing on 16-12-6.
  */
 
-public class WaveDrawable extends Drawable implements Animatable {
+public class WaveDrawable extends Drawable implements Animatable, ValueAnimator.AnimatorUpdateListener {
 
     private static final float WAVE_AMPLITUDE_FACTOR = 0.1f;
     private static final float WAVE_SPEED_FACTOR = 0.02f;
     private Drawable mDrawable;
     private int mWidth, mHeight;
     private int mWaveAmplitude, mWaveLength, mWaveOffset, mWaveStep, mWaveLevel;
-    private ValueAnimator mAnimator;
+    private ValueAnimator mAnimator = null;
     private float mProgress = 0.3f;
     private Paint mPaint;
     private Bitmap mMask;
@@ -87,21 +87,6 @@ public class WaveDrawable extends Drawable implements Animatable {
         mPaint.setColor(Color.BLACK);
         mPaint.setXfermode(sXfermode);
 
-        mAnimator = ValueAnimator.ofFloat(0.1f, 1);
-        mAnimator.setInterpolator(new DecelerateInterpolator());
-        mAnimator.setRepeatMode(ValueAnimator.REVERSE);
-        mAnimator.setRepeatCount(ValueAnimator.INFINITE);
-        mAnimator.setDuration(5000);
-        mAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
-            @Override
-            public void onAnimationUpdate(ValueAnimator valueAnimator) {
-                setProgress((float) valueAnimator.getAnimatedValue());
-                if (!mRunning) {
-                    invalidateSelf();
-                }
-            }
-        });
-
         setProgress(0);
         start();
     }
@@ -137,6 +122,46 @@ public class WaveDrawable extends Drawable implements Animatable {
             mWaveLength = length;
             mMask = createMask(mWidth, mWaveLength, mWaveAmplitude);
             invalidateSelf();
+        }
+    }
+
+    /**
+     * Set the wave loading in indeterminate mode or not
+     * @param indeterminate
+     */
+    public void setIndeterminate(boolean indeterminate) {
+        mIndeterminate = indeterminate;
+        if (mIndeterminate) {
+            if (mAnimator == null) {
+                mAnimator = getDefaultAnimator();
+                mAnimator.addUpdateListener(this);
+            }
+            mAnimator.start();
+        } else {
+            if (mAnimator != null) {
+                mAnimator.removeUpdateListener(this);
+                mAnimator.cancel();
+            }
+        }
+    }
+
+    /**
+     * Set customised animator for wave loading animation
+     * @param animator
+     */
+    public void setIndeterminateAnimator(ValueAnimator animator) {
+        if (mAnimator == animator) {
+            return;
+        }
+
+        if (mAnimator != null) {
+            mAnimator.removeUpdateListener(this);
+            mAnimator.cancel();
+        }
+
+        mAnimator = animator;
+        if (mAnimator != null) {
+            mAnimator.addUpdateListener(this);
         }
     }
 
@@ -233,17 +258,27 @@ public class WaveDrawable extends Drawable implements Animatable {
         return mRunning;
     }
 
+    @Override
+    public void onAnimationUpdate(ValueAnimator animation) {
+        if (mIndeterminate) {
+            setProgress(animation.getAnimatedFraction());
+            if (!mRunning) {
+                invalidateSelf();
+            }
+        }
+    }
+
     public boolean isIndeterminate() {
         return mIndeterminate;
     }
 
-    public void setIndeterminate(boolean indeterminate) {
-        mIndeterminate = indeterminate;
-        if (mIndeterminate) {
-            mAnimator.start();
-        } else {
-            mAnimator.cancel();
-        }
+    private ValueAnimator getDefaultAnimator() {
+        ValueAnimator animator = ValueAnimator.ofFloat(0, 1);
+        animator.setInterpolator(new DecelerateInterpolator());
+        animator.setRepeatMode(ValueAnimator.RESTART);
+        animator.setRepeatCount(ValueAnimator.INFINITE);
+        animator.setDuration(5000);
+        return animator;
     }
 
     private void setProgress(float progress) {

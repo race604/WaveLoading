@@ -29,6 +29,8 @@ Other configurable APIs:
 * `public void setIndeterminate(boolean indeterminate)`, like progress bar, if run
 in *indeterminate* mode, it'll increase water level over and over again, otherwise, you can
 use `boolean setLevel(int level)` to set the water level, acting as loading progress.
+* `public void setIndeterminateAnimator(ValueAnimator animator)`, set you customised animator
+for wave loading animation in indeterminate mode.
 
 ## License
 MIT

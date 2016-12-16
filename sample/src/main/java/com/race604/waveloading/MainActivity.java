@@ -1,20 +1,12 @@
 package com.race604.waveloading;
 
-import android.graphics.Bitmap;
-import android.graphics.Canvas;
-import android.os.Environment;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.view.View;
+import android.support.v7.app.AppCompatActivity;
 import android.widget.ImageView;
 import android.widget.RadioGroup;
 import android.widget.SeekBar;
 
 import com.race604.drawable.wave.WaveDrawable;
-
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.IOException;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -81,6 +73,14 @@ public class MainActivity extends AppCompatActivity {
         ImageView imageView2 = (ImageView) findViewById(R.id.image2);
         WaveDrawable chromeWave = new WaveDrawable(this, R.drawable.chrome_logo);
         imageView2.setImageDrawable(chromeWave);
+
+        // Set customised animator here
+//        ValueAnimator animator = ValueAnimator.ofFloat(0, 1);
+//        animator.setRepeatMode(ValueAnimator.REVERSE);
+//        animator.setRepeatCount(ValueAnimator.INFINITE);
+//        animator.setDuration(4000);
+//        animator.setInterpolator(new AccelerateDecelerateInterpolator());
+//        chromeWave.setIndeterminateAnimator(animator);
         chromeWave.setIndeterminate(true);
     }
 
