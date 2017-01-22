@@ -147,14 +147,15 @@ public class WaveDrawable extends Drawable implements Animatable, ValueAnimator.
         if (mIndeterminate) {
             if (mAnimator == null) {
                 mAnimator = getDefaultAnimator();
-                mAnimator.addUpdateListener(this);
             }
+            mAnimator.addUpdateListener(this);
             mAnimator.start();
         } else {
             if (mAnimator != null) {
                 mAnimator.removeUpdateListener(this);
                 mAnimator.cancel();
             }
+            setLevel(calculateLevel());
         }
     }
 
@@ -331,6 +332,10 @@ public class WaveDrawable extends Drawable implements Animatable, ValueAnimator.
         mProgress = progress;
         mWaveLevel = mHeight - (int)((mHeight + mWaveHeight) * mProgress);
         invalidateSelf();
+    }
+
+    private int calculateLevel() {
+        return (mHeight - mWaveLevel) * 10000 / (mHeight + mWaveHeight);
     }
 
     private void updateMask(int width, int length, int height) {
